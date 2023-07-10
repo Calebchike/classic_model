@@ -1,0 +1,4 @@
+Using the Reverse Engineer Database tool made available in MYSQL workbench, I created an Entity Relationship Diagram (ERD) to show the 
+pictorial representation of the data relationships available in the classic_model database.
+The ERD also displays how the primary key, foreign key, and composite key are used to link the tables. 
+these keys are represented with different icons from the regular column names.
