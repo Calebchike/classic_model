@@ -58,7 +58,7 @@ WHERE
 
 /*what is the average credit limit offered?*/
 SELECT 
-    AVG(creditLimit) AS avgLimit
+    FLOOR(AVG(creditLimit)) AS avgLimit
 FROM
     customers;
 
