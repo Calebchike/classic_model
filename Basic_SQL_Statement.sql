@@ -7,6 +7,22 @@ SELECT
 FROM
     customers;
 
+    /*what is the maximum order made by a customers?*/
+    SELECT 
+        quantityOrdered
+    FROM 
+        orderdetails
+    ORDER BY quantityOrdered DESC
+    LIMIT 1;
+
+    /*what is the minimum order made by a customers?*/
+    SELECT 
+        quantityOrdered
+    FROM 
+        orderdetails
+    ORDER BY quantityOrdered ASC
+    LIMIT 1;
+
 /*what is the total number of employees?*/
 SELECT 
     COUNT(employeeNumber) AS totalEmployee
@@ -56,9 +72,6 @@ FROM
 WHERE
     salesRepEmployeeNumber IS NULL;
 
-/*what is the average credit limit offered?*/
-SELECT 
-    FLOOR(AVG(creditLimit)) AS avgLimit
-FROM
-    customers;
+
+
 
