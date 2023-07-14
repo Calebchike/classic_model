@@ -8,7 +8,7 @@ FROM
 
 /*what is the average credit limit offered?*/
 SELECT 
-    FLOOR(AVG(creditLimit)) AS avgLimit
+    FLOOR(AVG(creditLimit)) AS avgCreditLimit
 FROM
     customers; 
 
@@ -45,9 +45,38 @@ LIMIT 1;
 
 
 /* what is the status of all order made in 2003 ?*/
-SELECT status,count(status) as totalOrder
+SELECT 
+    status,count(status) as totalOrder
 FROM
-orders
+    orders
 WHERE YEAR(orderDate)=2003
-GROUP BY status
-;
+GROUP BY status;
+
+
+/* what is the status of all order made since the start ?*/
+SELECT 
+    status,count(status) as totalOrder
+FROM
+    orders
+GROUP BY status;
+
+
+/* list customers with disputed orders,year of dispute and the reason for dispute ?*/
+SELECT
+    customerName,YEAR(orderDate), status, comments as reasonForDispute
+FROM customers c
+JOIN orders o
+    ON o.customerNumber=c.customerNumber
+WHERE status ="disputed";    
+
+
+/* list customers with disputed orders,total order quantity, price each, amount, and the reason for dispute ?*/
+SELECT
+    customerName, status,quantityOrdered,orderDate, priceEach, (quantityOrdered*priceEach) as amount, comments as reasonForDispute
+FROM customers c
+JOIN orders o
+    USING (customerNumber)
+JOIN orderdetails od 
+    USING (orderNumber)
+WHERE status ="disputed"; 
+
