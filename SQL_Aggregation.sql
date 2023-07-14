@@ -80,3 +80,30 @@ JOIN orderdetails od
     USING (orderNumber)
 WHERE status ="disputed"; 
 
+
+/* group the customers based on silver(order<10k),gold(order between 10k and 100k), 
+and platinum(order>100k) the table should contain the customer name amount ordered and the customerGroup?*/
+select customerName, ROUND(SUM(quantityOrdered*priceEach)) as amount,
+    (case
+        WHEN sum(quantityOrdered*priceEach)<10000 THEN "silver"
+        WHEN sum(quantityOrdered*priceEach) BETWEEN 10000 AND 100000 THEN "gold"
+        WHEN sum(quantityOrdered*priceEach)>100000 THEN "platinium" 
+        END) as customerGroup
+from orderdetails
+JOIN orders
+    USING (orderNumber)
+JOIN customers
+    USING (customerNumber)
+GROUP BY orderNumber;
+
+/* who are the top 5 platinum customers(customers having orderAmount > 100k) and their order amount?*/
+select customerName, ROUND(SUM(quantityOrdered*priceEach)) as amount
+from orderdetails
+JOIN orders
+    USING (orderNumber)
+JOIN customers
+    USING (customerNumber)
+GROUP BY customerName
+HAVING ROUND(SUM(quantityOrdered*priceEach)) > 100000
+ORDER BY amount DESC
+LIMIT 5;
