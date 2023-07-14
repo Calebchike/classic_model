@@ -96,8 +96,13 @@ JOIN customers
     USING (customerNumber)
 GROUP BY orderNumber;
 
+
 /* who are the top 5 platinum customers(customers having orderAmount > 100k) and their order amount?*/
-select customerName, ROUND(SUM(quantityOrdered*priceEach)) as amount
+select customerName, ROUND(SUM(quantityOrdered*priceEach)) as amount,     (case
+        WHEN sum(quantityOrdered*priceEach)<10000 THEN "silver"
+        WHEN sum(quantityOrdered*priceEach) BETWEEN 10000 AND 100000 THEN "gold"
+        WHEN sum(quantityOrdered*priceEach)>100000 THEN "platinium" 
+        END) as customerGroup
 from orderdetails
 JOIN orders
     USING (orderNumber)
@@ -107,3 +112,44 @@ GROUP BY customerName
 HAVING ROUND(SUM(quantityOrdered*priceEach)) > 100000
 ORDER BY amount DESC
 LIMIT 5;
+
+
+/* who are the top 5 gold customers(customers having orderAmount between 10k and 100k) and their order amount?*/
+select customerName, ROUND(SUM(quantityOrdered*priceEach)) as amount,     (case
+        WHEN sum(quantityOrdered*priceEach)<10000 THEN "silver"
+        WHEN sum(quantityOrdered*priceEach) BETWEEN 10000 AND 100000 THEN "gold"
+        WHEN sum(quantityOrdered*priceEach)>100000 THEN "platinium" 
+        END) as customerGroup
+from orderdetails
+JOIN orders
+    USING (orderNumber)
+JOIN customers
+    USING (customerNumber)
+GROUP BY customerName
+HAVING ROUND(SUM(quantityOrdered*priceEach)) > 100000
+ORDER BY amount DESC
+LIMIT 5;
+
+
+/* does the customers total purchase give them higher credit limit*/
+SELECT customerName,ROUND(SUM(quantityOrdered*priceEach)) as amount ,creditLimit
+FROM customers
+JOIN orders
+    USING(customerNumber)
+JOIN orderdetails
+    USING (orderNumber) 
+GROUP BY 1,3
+ORDER BY amount DESC;
+
+
+SELECT * 
+FROM 
+    (SELECT customerName,ROUND(SUM(quantityOrdered*priceEach)) as amount ,creditLimit
+FROM customers
+JOIN orders
+    USING(customerNumber)
+JOIN orderdetails
+    USING (orderNumber) 
+GROUP BY 1,3
+ORDER BY amount DESC) as t1
+WHERE customerName LIKE "%Co.%";
