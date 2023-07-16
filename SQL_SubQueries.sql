@@ -90,7 +90,7 @@ WHERE customerName LIKE "%Co.%";
 
 /* how many total order do we have of each products in the classic cars productline and what is their total sales? */
 SELECT productName, COUNT(productName) totalOrder, ROUND(SUM(priceEach*quantityOrdered)) as totalSales
-FROM(SELECT *
+FROM (SELECT *
     FROM products
     WHERE productLine ="Classic Cars") as classicCars
 JOIN orderdetails
@@ -98,4 +98,29 @@ JOIN orderdetails
 GROUP BY productName
 ORDER BY totalOrder DESC, totalSales DESC;
 
+/* who are the customers that have at least one order? */
+SELECT customerNumber, customerName
+FROM customers c
+WHERE EXISTS(SELECT *
+            FROM orders o
+            WHERE c.customerNumber=o.customerNumber
+            )
+;
+
+/* list of all employee working at the paris office */
+SELECT employeeNumber, lastName, firstName, extension
+FROM employees e
+WHERE EXISTS(SELECT *
+            FROM offices o
+            WHERE city="Paris" AND 
+            e.officeCode=o.officeCode)
+;
+
+/* Alternatively, the query below could also be used to get the list of all employee working at the paris office 
+same as the query above*/
+SELECT employeeNumber, lastName, firstName, extension
+FROM employees
+JOIN offices
+    USING (officeCode)
+WHERE city="Paris";
 
