@@ -142,14 +142,48 @@ GROUP BY 1,3
 ORDER BY amount DESC;
 
 
-SELECT * 
-FROM 
-    (SELECT customerName,ROUND(SUM(quantityOrdered*priceEach)) as amount ,creditLimit
-FROM customers
-JOIN orders
-    USING(customerNumber)
+/* what is the number of products available for each productline? */
+SELECT productLine, COUNT(productLine) as numberOfProduct
+FROM products p
+GROUP BY productLine
+ORDER BY numberOfProduct DESC
+;
+
+/* what is the total sales made by each productline? */
+SELECT productLine, COUNT(productLine) as totalOrder, ROUND(SUM(quantityOrdered*priceEach)) as totalSales
+FROM products
 JOIN orderdetails
-    USING (orderNumber) 
-GROUP BY 1,3
-ORDER BY amount DESC) as t1
-WHERE customerName LIKE "%Co.%";
+    USING (productCode)
+GROUP BY productLine
+ORDER BY totalSales DESC
+;
+
+/* what is the total sales and order made by each product in the ships productLine? */
+SELECT productName, COUNT(productName) as totalOrder, ROUND(SUM(quantityOrdered*priceEach)) as totalSales
+FROM products
+JOIN orderdetails
+    USING (productCode)
+WHERE productLine = "Ships"
+GROUP BY productName
+ORDER BY totalSales DESC
+;
+
+/* based on sales what are the top 5 product? */
+SELECT productName, productLine, COUNT(productName) as totalOrder, ROUND(SUM(quantityOrdered*priceEach)) as totalSales
+FROM products
+JOIN orderdetails
+    USING (productCode)
+GROUP BY productName,productLine
+ORDER BY totalSales DESC
+LIMIT 5;
+
+/* who are the least 5 vendors and their total sales? */
+SELECT productVendor, COUNT(productVendor) as totalOrder, ROUND(SUM(quantityOrdered*priceEach)) as totalSales
+FROM products
+JOIN orderdetails
+    USING (productCode)
+GROUP BY productVendor
+ORDER BY totalSales ASC
+LIMIT 5
+;
+

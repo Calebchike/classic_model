@@ -1,4 +1,17 @@
-/* what is the total purchase and total credit limit of customers that are a corperative(Co.)*/
+/* what is the total sales and total credit limit of each customer that is a corperative(Co.)*/
+SELECT * 
+FROM 
+    (SELECT customerName,ROUND(SUM(quantityOrdered*priceEach)) as amount ,creditLimit
+FROM customers
+JOIN orders
+    USING(customerNumber)
+JOIN orderdetails
+    USING (orderNumber) 
+GROUP BY 1,3
+ORDER BY amount DESC) as t1
+WHERE customerName LIKE "%Co.%";
+
+/* what is the total sales and total credit limit of all customers that are a corperative(Co.)*/
 SELECT SUM(amount)as totalAmount, ROUND(SUM(creditLimit)) as TotalCredit
 FROM (SELECT customerName,ROUND(SUM(quantityOrdered*priceEach)) as amount ,creditLimit
     FROM customers
@@ -62,4 +75,27 @@ FROM (SELECT customerName,country,ROUND(SUM(quantityOrdered*priceEach)) as amoun
 GROUP BY 1
 HAVING totalCredit < totalAmount
 ORDER BY totalAmount DESC;
+
+SELECT * 
+FROM 
+    (SELECT customerName,ROUND(SUM(quantityOrdered*priceEach)) as amount ,creditLimit
+FROM customers
+JOIN orders
+    USING(customerNumber)
+JOIN orderdetails
+    USING (orderNumber) 
+GROUP BY 1,3
+ORDER BY amount DESC) as t1
+WHERE customerName LIKE "%Co.%";
+
+/* how many total order do we have of each products in the classic cars productline and what is their total sales? */
+SELECT productName, COUNT(productName) totalOrder, ROUND(SUM(priceEach*quantityOrdered)) as totalSales
+FROM(SELECT *
+    FROM products
+    WHERE productLine ="Classic Cars") as classicCars
+JOIN orderdetails
+    USING (productCode)
+GROUP BY productName
+ORDER BY totalOrder DESC, totalSales DESC;
+
 
