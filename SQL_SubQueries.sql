@@ -124,3 +124,23 @@ JOIN offices
     USING (officeCode)
 WHERE city="Paris";
 
+
+
+
+/* This query uses CTE to obtain the total sales of all asian countries*/
+WITH asianCountries AS 
+            (SELECT *
+            FROM customers
+            WHERE country IN ("Japan","Hong Kong","Russia")), 
+    asianOrders AS 
+            (SELECT country, ROUND(SUM(quantityOrdered*priceEach)) totalSales
+            FROM asianCountries
+            JOIN orders
+                USING (customerNumber)
+            JOIN orderdetails
+                USING(orderNumber)
+            GROUP BY country 
+            ORDER BY totalSales DESC)
+    SELECT * 
+    FROM asianOrders;
+
