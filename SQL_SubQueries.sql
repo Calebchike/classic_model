@@ -139,7 +139,7 @@ WITH asianCountries AS
                 USING (customerNumber)
             JOIN orderdetails
                 USING(orderNumber)
-            GROUP BY country 
+            GROUP BY country WITH ROLLUP
             ORDER BY totalSales DESC)
     SELECT * 
     FROM asianOrders;
