@@ -7,7 +7,7 @@ SELECT
 FROM
     customers;
 
-    /*what is the maximum order made by a customers?*/
+    /*what is the maximum order made by a customer?*/
     SELECT 
         quantityOrdered
     FROM 
