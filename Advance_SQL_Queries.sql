@@ -38,9 +38,7 @@ SELECT DISTINCT country co,
     WHERE country = co
     GROUP BY firstName,country
     ORDER BY numberOfSales DESC
-    LIMIT 1) numberOfSales, 
-
-    (SELECT CONCAT(firstName, " ", lastName)
+    LIMIT 1) AS numberOfSales, (SELECT CONCAT(firstName, " ", lastName)
     FROM employees  e
     JOIN customers c
         ON e.employeeNumber=c.salesRepEmployeeNumber
@@ -50,8 +48,7 @@ SELECT DISTINCT country co,
         USING (orderNumber)
     WHERE country = co AND numberOfSales = numberOfSales
     LIMIT 1
-    ) salesRep
-
+    ) AS salesRep
 FROM employees  e
 JOIN customers c
     ON e.employeeNumber=c.salesRepEmployeeNumber
